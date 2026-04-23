@@ -1,0 +1,21 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-server
+  profiles:
+    active: native
+  cloud:
+    config:
+      server:
+        native:
+          # 로컬: docker-compose에서 ./config 볼륨 마운트 → /config
+          # IDE 직접 실행 시: file:./config (infra 클론 후 경로 지정)
+          search-locations: file:///config
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
