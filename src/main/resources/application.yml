@@ -4,18 +4,39 @@ server:
 spring:
   application:
     name: config-server
-  profiles:
-    active: native
-  cloud:
-    config:
-      server:
-        native:
-          # 로컬: docker-compose에서 ./config 볼륨 마운트 → /config
-          # IDE 직접 실행 시: file:./config (infra 클론 후 경로 지정)
-          search-locations: file:///config
 
 management:
   endpoints:
     web:
       exposure:
         include: health, info
+
+---
+# 로컬 개발용 (docker-compose.dev.yml: SPRING_PROFILES_ACTIVE=native)
+spring:
+  config:
+    activate:
+      on-profile: native
+  cloud:
+    config:
+      server:
+        native:
+          # docker-compose에서 ./config 볼륨 마운트 → /config
+          search-locations: file:///config
+
+---
+# 배포용 (docker-compose.yml: SPRING_PROFILES_ACTIVE=git)
+spring:
+  config:
+    activate:
+      on-profile: git
+  cloud:
+    config:
+      server:
+        git:
+          uri: ${CONFIG_GIT_URI}
+          username: ${CONFIG_GIT_USERNAME}
+          password: ${CONFIG_GIT_TOKEN}
+          default-label: main
+          clone-on-start: true
+          force-pull: true
