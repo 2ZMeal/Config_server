@@ -9,7 +9,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health, info
+        include: health, info, prometheus
 
 ---
 # 로컬 개발용 (docker-compose.dev.yml: SPRING_PROFILES_ACTIVE=native)
